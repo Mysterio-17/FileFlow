@@ -1,8 +1,8 @@
 package connection
 
 import (
-	"drizlink/helper"
-	"drizlink/server/interfaces"
+	"fileflow/helper"
+	"fileflow/server/interfaces"
 	"fmt"
 	"net"
 	"strconv"
@@ -147,13 +147,13 @@ func handleUserMessages(conn net.Conn, user *interfaces.User, server *interfaces
 			fileName := args[2]
 			fileSizeStr := strings.TrimSpace(args[3])
 			fileSize, err := strconv.ParseInt(fileSizeStr, 10, 64)
-			
+
 			// Include checksum in filename if provided
 			if len(args) == 5 {
 				checksum := strings.TrimSpace(args[4])
 				fileName = fileName + "|" + checksum
 			}
-			
+
 			if err != nil {
 				fmt.Println("Invalid fileSize. Use: /FILE_REQUEST <userId> <filename> <fileSize> [checksum]")
 				continue
@@ -171,13 +171,13 @@ func handleUserMessages(conn net.Conn, user *interfaces.User, server *interfaces
 			folderName := args[2]
 			folderSizeStr := strings.TrimSpace(args[3])
 			folderSize, err := strconv.ParseInt(folderSizeStr, 10, 64)
-			
+
 			// Include checksum in foldername if provided
 			if len(args) == 5 {
 				checksum := strings.TrimSpace(args[4])
 				folderName = folderName + "|" + checksum
 			}
-			
+
 			if err != nil {
 				fmt.Println("Invalid folderSize. Use: /FOLDER_REQUEST <userId> <folderName> <folderSize> [checksum]")
 				continue

@@ -1,8 +1,8 @@
 package connection
 
 import (
-	"drizlink/helper"
-	"drizlink/utils"
+	"fileflow/helper"
+	"fileflow/utils"
 	"fmt"
 	"io"
 	"net"
@@ -10,7 +10,6 @@ import (
 	"path/filepath"
 	"strings"
 	"time"
-
 )
 
 func HandleSendFile(conn net.Conn, recipientId, filePath string) {

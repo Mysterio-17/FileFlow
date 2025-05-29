@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  # FileFlow Server
+  fileflow-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fileflow-server
+    ports:
+      - "8080:8080"
+    command: ["./server", "--port", "8080"]
+    networks:
+      - fileflow-network
+    restart: unless-stopped
+
+  # FileFlow Client 1 (Example)
+  fileflow-client1:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fileflow-client1
+    depends_on:
+      - fileflow-server
+    volumes:
+      - ./client1-shared:/root/shared
+    command: ["./client", "--server", "fileflow-server:8080"]
+    networks:
+      - fileflow-network
+    stdin_open: true
+    tty: true
+    restart: unless-stopped
+
+  # FileFlow Client 2 (Example)
+  fileflow-client2:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fileflow-client2
+    depends_on:
+      - fileflow-server
+    volumes:
+      - ./client2-shared:/root/shared
+    command: ["./client", "--server", "fileflow-server:8080"]
+    networks:
+      - fileflow-network
+    stdin_open: true
+    tty: true
+    restart: unless-stopped
+
+networks:
+  fileflow-network:
+    driver: bridge

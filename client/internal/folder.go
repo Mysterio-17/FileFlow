@@ -1,8 +1,8 @@
 package connection
 
 import (
-	"drizlink/helper"
-	"drizlink/utils"
+	"fileflow/helper"
+	"fileflow/utils"
 	"fmt"
 	"io"
 	"net"

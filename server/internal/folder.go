@@ -1,7 +1,7 @@
 package connection
 
 import (
-	"drizlink/server/interfaces"
+	"fileflow/server/interfaces"
 	"fmt"
 	"io"
 	"net"

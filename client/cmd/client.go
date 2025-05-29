@@ -2,9 +2,9 @@ package main
 
 import (
 	"bufio"
-	connection "drizlink/client/internal"
-	"drizlink/helper"
-	"drizlink/utils"
+	connection "fileflow/client/internal"
+	"fileflow/helper"
+	"fileflow/utils"
 	"flag"
 	"fmt"
 	"os"
@@ -13,34 +13,34 @@ import (
 
 func promptForServerAddress() string {
 	reader := bufio.NewReader(os.Stdin)
-	
+
 	for {
 		fmt.Println(utils.InfoColor("Enter server address (format host:port):"))
 		fmt.Print(utils.CommandColor(">>> "))
 		address, _ := reader.ReadString('\n')
 		address = strings.TrimSpace(address)
-		
+
 		if !strings.Contains(address, ":") {
 			fmt.Println(utils.ErrorColor("❌ Invalid address format. Please use host:port (e.g., localhost:8080)"))
 			continue
 		}
-		
+
 		// Check if server is available at this address
 		available, errMsg := helper.CheckServerAvailability(address)
 		if !available {
 			fmt.Println(utils.ErrorColor("❌ No server available at " + address + ": " + errMsg))
 			fmt.Println(utils.InfoColor("Would you like to try another address? (y/n)"))
 			fmt.Print(utils.CommandColor(">>> "))
-			
+
 			retry, _ := reader.ReadString('\n')
 			retry = strings.TrimSpace(strings.ToLower(retry))
-			
+
 			if retry != "y" && retry != "yes" {
 				os.Exit(1)
 			}
 			continue
 		}
-		
+
 		return address
 	}
 }
@@ -48,16 +48,16 @@ func promptForServerAddress() string {
 func main() {
 	serverAddr := flag.String("server", "", "Server address in format host:port")
 	flag.Parse()
-	
+
 	utils.PrintBanner()
-	
+
 	// If server address not provided via command line, ask user
 	address := *serverAddr
 	if address == "" {
 		address = promptForServerAddress()
 	} else {
 		fmt.Println(utils.InfoColor("Connecting to server at " + address + "..."))
-		
+
 		// Check if server is available
 		available, errMsg := helper.CheckServerAvailability(address)
 		if !available {
@@ -67,7 +67,7 @@ func main() {
 			return
 		}
 	}
-	
+
 	conn, err := connection.Connect(address)
 	if err != nil {
 		if err.Error() == "reconnect" {
@@ -91,7 +91,6 @@ func main() {
 		}
 	}
 
-
 	err = connection.UserInput("Store File Path", conn)
 	if err != nil {
 		if err.Error() == "reconnect" {
@@ -103,7 +102,7 @@ func main() {
 	}
 
 startChat:
-	fmt.Println(utils.HeaderColor("\n✨ Welcome to DrizLink - P2P File Sharing! ✨"))
+	fmt.Println(utils.HeaderColor("\n✨ Welcome to FileFlow - P2P File Sharing! ✨"))
 	fmt.Println(utils.InfoColor("------------------------------------------------"))
 	fmt.Println(utils.SuccessColor("✅ Successfully connected to server!"))
 	fmt.Println(utils.InfoColor("Type /help to see available commands"))

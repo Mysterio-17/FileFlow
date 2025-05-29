@@ -1,4 +1,4 @@
-module drizlink
+module fileflow
 
 go 1.22.3
 

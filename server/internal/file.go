@@ -1,7 +1,7 @@
 package connection
 
 import (
-	"drizlink/server/interfaces"
+	"fileflow/server/interfaces"
 	"fmt"
 	"io"
 	"net"
@@ -12,19 +12,19 @@ func HandleFileTransfer(server *interfaces.Server, conn net.Conn, recipientId, f
 	// Extract checksum if present
 	checksum := ""
 	fileNameWithChecksum := fileName
-	
+
 	parts := strings.SplitN(fileName, "|", 2)
 	if len(parts) == 2 {
 		fileName = parts[0]
 		checksum = parts[1]
 		fmt.Println("Original checksum:", checksum)
 	}
-	
+
 	recipient, exists := server.Connections[recipientId]
 	if exists {
 		// Include checksum in response if available
-		_, err := recipient.Conn.Write([]byte(fmt.Sprintf("/FILE_RESPONSE %s %s %d %s", 
-		    recipientId, fileNameWithChecksum, fileSize, recipient.StoreFilePath)))
+		_, err := recipient.Conn.Write([]byte(fmt.Sprintf("/FILE_RESPONSE %s %s %d %s",
+			recipientId, fileNameWithChecksum, fileSize, recipient.StoreFilePath)))
 		if err != nil {
 			fmt.Printf("Error sending file response to %s: %v\n", recipientId, err)
 		}

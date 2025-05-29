@@ -1,6 +1,8 @@
-# � Echobox - P2P File Sharing Application �
+# 🌐 FileFlow - P2P File Sharing Application 📁
 
 A peer-to-peer file sharing application with integrated chat functionality, allowing users to connect, communicate, and share files directly with each other.
+
+Built with Go and Docker for seamless deployment and cross-platform compatibility.
 
 ## ✨ Features
 
@@ -18,43 +20,123 @@ A peer-to-peer file sharing application with integrated chat functionality, allo
 ## 🚀 Installation
 
 ### Prerequisites
-- Go (1.16 or later) 🔧
+- Docker and Docker Compose (recommended) 🐳
+- OR Go (1.22.3 or later) 🔧
 
-### Steps
+### Option 1: Using Docker (Recommended) 🐳
+
 1. Clone the repository ⬇️
 ```bash
-git clone https://github.com/mahil-2040/Echobox.git
-cd Echobox
+git clone https://github.com/YOUR_USERNAME/FileFlow.git
+cd FileFlow
 ```
 
-2. Build the application 🛠️
+2. Build and run with Docker Compose 🛠️
 ```bash
-go build -o Echobox
+# Start the server and example clients
+docker-compose up -d
+
+# View logs
+docker-compose logs -f
+
+# Stop all services
+docker-compose down
+```
+
+3. Run individual containers 📦
+```bash
+# Build the Docker image
+docker build -t fileflow .
+
+# Run server
+docker run -d -p 8080:8080 --name fileflow-server fileflow ./server --port 8080
+
+# Run client (interactive mode)
+docker run -it --name fileflow-client1 --link fileflow-server fileflow ./client --server fileflow-server:8080
+```
+
+### Option 2: Native Installation (Without Docker) 🔧
+
+1. Clone the repository ⬇️
+```bash
+git clone https://github.com/YOUR_USERNAME/FileFlow.git
+cd FileFlow
+```
+
+2. Install dependencies 📦
+```bash
+go mod download
+```
+
+3. Build the application 🛠️
+```bash
+# Build server
+go build -o bin/server ./server/cmd/server.go
+
+# Build client
+go build -o bin/client ./client/cmd/client.go
 ```
 
 ## 🎮 Usage
 
-### Starting the Server 🖥️
+### Using Docker 🐳
+
+#### Starting the Server
 ```bash
-# Start server on default port 8080
-go run ./server/cmd --port 8080
+# Using Docker Compose
+docker-compose up fileflow-server
 
-# Start server on custom port
-go run ./server/cmd --port 3000
+# Using Docker directly
+docker run -d -p 8080:8080 --name fileflow-server fileflow ./server --port 8080
 
+# Custom port
+docker run -d -p 3000:3000 --name fileflow-server fileflow ./server --port 3000
 ```
 
-### Connecting as a Client 📱
+#### Connecting as a Client
 ```bash
-# Connect to local server with default port
-go run ./client/cmd --server localhost:8080
+# Using Docker Compose (interactive mode)
+docker-compose run --rm fileflow-client1
+
+# Using Docker directly
+docker run -it --link fileflow-server --name fileflow-client \
+  -v $(pwd)/shared:/root/shared \
+  fileflow ./client --server fileflow-server:8080
 
 # Connect to remote server
-go run ./client/cmd --server 192.168.0.203:4000
-
+docker run -it --name fileflow-client \
+  -v $(pwd)/shared:/root/shared \
+  fileflow ./client --server 192.168.0.203:8080
 ```
 
-The application will validate:
+### Using Native Binaries 🔧
+
+#### Starting the Server 🖥️
+```bash
+# Start server on default port 8080
+go run ./server/cmd/server.go --port 8080
+
+# Or use the built binary
+./bin/server --port 8080
+
+# Start server on custom port
+./bin/server --port 3000
+```
+
+#### Connecting as a Client 📱
+```bash
+# Connect to local server
+go run ./client/cmd/client.go --server localhost:8080
+
+# Or use the built binary
+./bin/client --server localhost:8080
+
+# Connect to remote server
+./bin/client --server 192.168.0.203:8080
+```
+
+### Application Validation ✅
+The application will automatically validate:
 - Server availability before client connection attempts
 - Port availability before starting a server
 - Existence of shared folder paths
@@ -123,4 +205,50 @@ The application implements basic reconnection security by tracking IP addresses 
 
 This checksum process ensures that files and folders arrive exactly as they were sent, protecting against data corruption during transfer.
 
-Made with ❤️ by the Echobox Team
+## 🐳 Docker Architecture
+
+FileFlow uses a multi-stage Docker build for optimized image size:
+- **Build Stage**: Compiles Go binaries with all dependencies
+- **Runtime Stage**: Minimal Alpine Linux image with only the compiled binaries
+- **Network**: Bridge network for container communication
+- **Volumes**: Persistent storage for shared files
+
+### Docker Benefits
+- ✅ Consistent environment across all platforms
+- ✅ Easy deployment and scaling
+- ✅ Isolated file storage per client
+- ✅ No need to install Go locally
+- ✅ Quick setup with docker-compose
+
+## 📊 Project Structure
+```
+FileFlow/
+├── client/
+│   ├── cmd/
+│   │   └── client.go          # Client entry point
+│   └── internal/
+│       ├── connection.go       # Connection handling
+│       ├── file.go            # File operations
+│       ├── folder.go          # Folder operations
+│       └── transfer.go        # Transfer management
+├── server/
+│   ├── cmd/
+│   │   └── server.go          # Server entry point
+│   ├── interfaces/
+│   │   └── interfaces.go      # Data structures
+│   └── internal/
+│       ├── connection.go       # Connection handling
+│       ├── file.go            # File operations
+│       └── folder.go          # Folder operations
+├── helper/
+│   └── helper.go              # Utility functions
+├── utils/
+│   └── ui.go                  # UI components
+├── Dockerfile                  # Docker build configuration
+├── docker-compose.yml         # Multi-container setup
+├── .dockerignore              # Docker ignore rules
+├── go.mod                     # Go dependencies
+└── README.md                  # Documentation
+```
+
+Made with ❤️ by the FileFlow Team
