@@ -1,4 +1,4 @@
-# 🔗 DrizLink - P2P File Sharing Application 🔗
+# � Echobox - P2P File Sharing Application �
 
 A peer-to-peer file sharing application with integrated chat functionality, allowing users to connect, communicate, and share files directly with each other.
 
@@ -23,13 +23,13 @@ A peer-to-peer file sharing application with integrated chat functionality, allo
 ### Steps
 1. Clone the repository ⬇️
 ```bash
-git clone https://github.com/Harsh2563/DrizLink_Cli.git
-cd DrizLink_Cli
+git clone https://github.com/mahil-2040/Echobox.git
+cd Echobox
 ```
 
 2. Build the application 🛠️
 ```bash
-go build -o DrizLink_Cli
+go build -o Echobox
 ```
 
 ## 🎮 Usage
@@ -123,4 +123,4 @@ The application implements basic reconnection security by tracking IP addresses 
 
 This checksum process ensures that files and folders arrive exactly as they were sent, protecting against data corruption during transfer.
 
-Made with ❤️ by the DrizLink Team
+Made with ❤️ by the Echobox Team
